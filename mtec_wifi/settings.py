@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import requests
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,15 +26,12 @@ SECRET_KEY = 'django-insecure-e_c*-w_$h%7t0#bub(ei53r%gyp03*lty67x24-i_n4^&%y1!t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Add your domain or IP for testing
 
 # Application definition
-
 INSTALLED_APPS = [
     'core',
     'jazzmin',
-    'mpesa',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'django_daraja',
 ]
 
 MIDDLEWARE = [
@@ -73,10 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mtec_wifi.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -84,10 +80,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -103,42 +96,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-AUTH_PASSWORD_VALIDATORS = [
-    # Default validators...
-]
-
-
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Africa/Nairobi'  # Set to EAT for Kenya
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+# Static files
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Jazzmin Config (Modern Admin Dashboard)
+# Jazzmin Config
 JAZZMIN_SETTINGS = {
     "site_title": "MTEC Admin",
     "site_header": "MTEC",
     "site_brand": "MTEC WiFi Admin",
-    "site_logo": None,  # Add logo path if you have one
+    "site_logo": None,
     "welcome_sign": "Welcome to MTEC WiFi Admin",
     "copyright": "MTEC © 2025",
     "search_model": ["auth.User", "core.Plan"],
@@ -153,7 +129,7 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
     "hide_models": [],
     "order_with_respect_to": ["auth", "core"],
-    "custom_css": "core/css/custom.css",  # Link custom CSS if needed for admin
+    "custom_css": "core/css/custom.css",
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
@@ -163,7 +139,20 @@ JAZZMIN_SETTINGS = {
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-    "theme": "darkly",  # Dark theme to match your colors
+    "theme": "darkly",
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {"auth.user": "vertical_tabs"},
 }
+
+# M-Pesa Configuration (Daraja Sandbox)
+MPESA_ENV = 'sandbox'  # Use 'live' for production
+MPESA_CONSUMER_KEY = 'Y0d8VdG0QmcTMpy7NWelQHswBtAd'  # Your Daraja Consumer Key
+MPESA_CONSUMER_SECRET = 'gytARKSXjayWFVbl1dObFGurbACmlM0b6jrUoxqK1uYZZMoviF8hdAnhE7v9h9Gt'  # Replace with your secret from Daraja
+MPESA_SHORTCODE = 174379  # Your Business Shortcode
+MPESA_PASSKEY = 'bfb279f9a9b9dbcfe158e97dd71a467cd2e0c893059b10f78e6b72ad1ed2c91'  # Your Passkey
+MPESA_INITIATOR_NAME = 'testapi'  # Initiator name (set in Daraja)
+MPESA_SECURITY_CREDENTIAL = 'm8h0Uu26Gaqfq2XLeHO9E3TAYl6okP9bEhNVqhgKmGKTGkP2'  # Generate via Daraja portal
+MPESA_CALLBACK_URL = 'http://127.0.0.1:8000/mpesa/stk-push/callback/'  # Local for testing; use ngrok or public URL
+MPESA_CONFIRMATION_URL = MPESA_CALLBACK_URL  # Same for now
+MPESA_VALIDATION_URL = MPESA_CALLBACK_URL  # Same for now
+MPESA_TIMEOUT_URL = MPESA_CALLBACK_URL  # Same for now
