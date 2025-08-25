@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <!-- Instructions Section -->
+    <section class="mb-5">
+        <h2 class="text-navy mb-4">How to Purchase</h2>
+        <ol class="list-group list-group-numbered">
+            <li class="list-group-item bg-white">Tap on your preferred package.</li>
+            <li class="list-group-item bg-white">Enter your phone number.</li>
+            <li class="list-group-item bg-white">Click 'Pay Now' and wait for the M-Pesa prompt (30 sec).</li>
+            <li class="list-group-item bg-white">Enter your M-Pesa PIN. Contact support if issues arise.</li>
+        </ol>
+    </section>
+
+    <!-- Plans Section -->
+    <section class="mb-5">
+        <h2 class="text-navy mb-4">Available Plans</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for plan in plans %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-navy">{{ plan.name }}</h5>
+                            <p class="card-text">KSH {{ plan.price }}{% if plan.data_limit_mb %} / {{ plan.data_limit_mb }}MB{% else %} / Unlimited{% endif %}</p>
+                            <button class="btn btn-orange text-white" data-bs-toggle="modal" data-bs-target="#mpesaModal" onclick="setPlan({{ plan.id }}, {{ plan.price }})">Purchase</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- M-Pesa Modal -->
+    <div class="modal fade" id="mpesaModal" tabindex="-1" aria-labelledby="mpesaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-navy text-white">
+                    <h5 class="modal-title" id="mpesaModalLabel">Pay with M-Pesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="mpesaForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ mpesa_form.phone_number|add_class:"form-control" }}
+                        </div>
+                        {{ mpesa_form.amount.as_hidden }}
+                        {{ mpesa_form.plan_id.as_hidden }}
+                        <button type="submit" class="btn btn-orange w-100">Pay Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reconnect Section -->
+    <section class="mb-5">
+        <h2 class="text-navy mb-4">Reconnect / Enter M-Pesa Code</h2>
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-auto">
+                <input type="text" name="mpesa_code" class="form-control" placeholder="Enter M-Pesa Code" required>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-navy text-white">Reconnect</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Voucher Section -->
+    <section class="mb-5">
+        <h2 class="text-navy mb-4">Voucher Recharge</h2>
+        <p class="text-muted mb-3">Enter voucher code from your payment (Call admin if not received).</p>
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-auto">
+                {{ voucher_form.code|add_class:"form-control" }}
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-orange">Activate Voucher</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Login Section -->
+    <section>
+        <h2 class="text-navy mb-4">MTEC WiFi Login</h2>
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-6">
+                {{ login_form.username|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6">
+                {{ login_form.password|add_class:"form-control" }}
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-navy text-white">Login</button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

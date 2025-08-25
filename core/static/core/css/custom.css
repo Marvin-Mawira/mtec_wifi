@@ -1,0 +1,77 @@
+/* Primary Colors */
+:root {
+    --navy: #001973;
+    --orange: #FF5E14;
+}
+
+/* Backgrounds */
+.bg-navy { background-color: var(--navy); }
+.bg-light { background-color: #FFFFFF; }
+
+/* Text */
+.text-navy { color: var(--navy) !important; }
+.text-orange { color: var(--orange) !important; }
+
+/* Buttons */
+.btn-navy {
+    background-color: var(--navy);
+    color: white;
+    border: none;
+}
+.btn-navy:hover {
+    background-color: #000d50;
+    color: white;
+}
+
+.btn-orange {
+    background-color: var(--orange);
+    color: white;
+    border: none;
+}
+.btn-orange:hover {
+    background-color: #e54d00;
+    color: white;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Forms */
+.form-control {
+    border-color: #ced4da;
+    border-radius: 5px;
+}
+.form-control:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 0.2rem rgba(255, 94, 20, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .row-cols-md-4 {
+        row-cols-2;
+    }
+    .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* General Styling */
+h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.list-group-item {
+    border: none;
+}
+.table-responsive {
+    overflow-x: auto;
+}
